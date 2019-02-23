@@ -1,0 +1,61 @@
+﻿
+@model WebApplicationDemo.Models.FacebookPostModels
+@{
+    ViewBag.Title = "PostsView";
+}
+
+<h2>PostsView</h2>
+
+@*<p>@Html.Raw(ViewBag.JSON)</p>*@
+<div class="fb-posts page-content">
+    @if (Request.IsAuthenticated)
+    {
+        <div class="row">
+            @foreach (var post in Model.data)
+            {
+                try
+                {
+                    //get only posts with images
+                    if (post.attachments.data[0].media != null)
+                    {
+                        DateTime postTime = DateTime.Parse(post.created_time);
+
+                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                            <a href="@post.attachments.data[0].target.url">
+                                <div class="panel panel-default fb-post-card">
+                                    <img class="post-img" src="@post.attachments.data[0].media.image.src" alt="img" />
+                                    <div class="panel-body" title="Go to post!">
+                                        <div class="row">
+                                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                                <img class="fb-icon" src="~/Images/facebook_icon.png" />
+                                            </div>
+                                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                                                <span class="fb-post-date">
+                                                    @postTime
+                                                </span>
+                                            </div>
+                                        </div><!--row-->
+                                        <p>@post.attachments.data[0].description</p>
+                                    </div><!--panel-body-->
+                                </div><!--card-->
+                            </a>
+                        </div><!--col-->
+
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    //There is null pointer exception
+                }
+
+
+            }
+        </div><!--row-->
+    }
+    else
+    {
+        <div class="alert alert-danger">Permission denied!!!</div>
+    }
+
+</div><!--fb-posts-->
